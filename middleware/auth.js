@@ -17,7 +17,6 @@ module.exports = async (req, res , next) => {
       // console.log('auth middleware', req.user.isAdmin)
 
       next();
-
    } catch(err) {
       
     console.log(err.message);
