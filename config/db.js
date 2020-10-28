@@ -8,7 +8,7 @@ const mongoDb = () => {
    useFindAndModify:true,
    useUnifiedTopology:true
 }).then(() => {
-   console.log('connected to database'.cyan.bold)
+   console.log('connected to database'.cyan.bold.underline)
 })
 .catch((err) => {
     console.log(err);
