@@ -40,7 +40,8 @@ exports.postSignup = async (req, res, next) => {
            res.json({
                token:token, 
                name:user.name,
-               email:user.email
+               email:user.email,
+               isAdmin:user.isAdmin
            })
        })
         
