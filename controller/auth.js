@@ -41,7 +41,8 @@ exports.postSignup = async (req, res, next) => {
                token:token, 
                name:user.name,
                email:user.email,
-               isAdmin:user.isAdmin
+               isAdmin:user.isAdmin,
+               _id: user._id
            })
        })
         
@@ -84,7 +85,9 @@ exports.postLogin = async (req, res, next) => {
                     token:token,
                     name:user.name,
                     email:user.email,
-                    isAdmin: user.isAdmin
+                    isAdmin: user.isAdmin,
+                    _id: user._id
+
                 })
             })
 
