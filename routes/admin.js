@@ -10,9 +10,9 @@ const admin = require('../middleware/admin');
 
 router.post("/addHotel",  auth , admin ,   adminController.addHotel);
 
-// all hotels 
+// all hotels when the user is login 
 
-router.get("/allHotels", auth,   adminController.AllHotels);
+router.get("/allHotels", auth, adminController.AllHotels);
 
 
 // get hotel by id 
