@@ -6,7 +6,7 @@ const mongoDb = () => {
    useNewUrlParser: true,
    useCreateIndex:true,
    useFindAndModify:true,
-   useUnifiedTopology:true
+   useUnifiedTopology: true
 }).then(() => {
    console.log('connected to database'.cyan.bold.underline)
 })
