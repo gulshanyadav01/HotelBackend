@@ -3,88 +3,88 @@ const bcrypt = require("bcryptjs");
 const jwt = require('jsonwebtoken')
 const getToken = require('../config/getToken')
 
-exports.postSignup = async (req, res, next) => {
-    const {name , email , password} = req.body
-    
+exports.postSignup = async(req, res, next) => {
+    const { name, email, password } = req.body
+
     try {
 
-       const userExists = await User.findOne({email : email});
-       
-       if(userExists) {
-           return res.status(400).json({msg:"user already exists"})
-       }
+        const userExists = await User.findOne({ email: email });
 
-      const user = new User({
-           name,
-           email,
-           password,
-      })
+        if (userExists) {
+            return res.status(400).json({ msg: "user already exists" })
+        }
 
-       const salt = await bcrypt.genSalt(10);
+        const user = new User(
+            name,
+            email,
+            password,
+        })
 
-       const hash = await bcrypt.hash(password, salt);
+    const salt = await bcrypt.genSalt(10);
 
-       user.password = hash;
+    const hash = await bcrypt.hash(password, salt);
 
-       await user.save();
+    user.password = hash;
 
-       const payload = {
-           user: {
-               id: user._id
-           }
-       }
+    await user.save();
 
-       jwt.sign(payload , process.env.JWT_SECRET , {expiresIn: 360000}, (err , token) => {
-           if(err) throw err;
-
-           res.json({
-               token:token, 
-               name:user.name,
-               email:user.email,
-               isAdmin:user.isAdmin,
-               _id: user._id
-           })
-       })
-        
-    } catch(err) {
-          console.log('err' , err)
+    const payload = {
+        user: {
+            id: user._id
+        }
     }
+
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
+        if (err) throw err;
+
+        res.json({
+            token: token,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            _id: user._id
+        })
+    })
+
+} catch (err) {
+    console.log('err', err)
+}
 
 }
 
 
 
-exports.postLogin = async (req, res, next) => {
+exports.postLogin = async(req, res, next) => {
 
-    const { email , password } = req.body;
-    
-    try { 
+    const { email, password } = req.body;
 
-        const user = await User.findOne({email});
+    try {
 
-        if(!user) {
-            return res.status(401).json({msg:"No User Found"})
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ msg: "No User Found" })
         } else {
-            const isMatch = await bcrypt.compare(password , user.password);
+            const isMatch = await bcrypt.compare(password, user.password);
 
-            if(!isMatch) {
-                return res.status(401).json({msg:'No user Found'});
+            if (!isMatch) {
+                return res.status(401).json({ msg: 'No user Found' });
             }
 
             const payload = {
                 user: {
-                    id: user._id, 
+                    id: user._id,
                 }
             }
 
-            jwt.sign(payload , process.env.JWT_SECRET , {expiresIn:360000} , (err , token) => {
-                
-                if(err) throw err;
+            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
+
+                if (err) throw err;
 
                 res.status(200).json({
-                    token:token,
-                    name:user.name,
-                    email:user.email,
+                    token: token,
+                    name: user.name,
+                    email: user.email,
                     isAdmin: user.isAdmin,
                     _id: user._id
 
@@ -94,23 +94,23 @@ exports.postLogin = async (req, res, next) => {
 
         }
 
-    } catch(err) {
-         console.log(err)
+    } catch (err) {
+        console.log(err)
     }
 }
 
 // information of user after login 
 
-exports.getUserInfo = async (req, res , next) => {
+exports.getUserInfo = async(req, res, next) => {
     try {
-       const user = await (await User.findById(req.user.id).populate('book')).execPopulate()
-       
-       if(!user) {
-           return res.status(401).json({msg:"Not authorized"})
-       }
+        const user = await (await User.findById(req.user.id).populate('book')).execPopulate()
 
-       res.status(200).json({user});
+        if (!user) {
+            return res.status(401).json({ msg: "Not authorized" })
+        }
+
+        res.status(200).json({ user });
     } catch (err) {
-       console.log(err);
+        console.log(err);
     }
 }
