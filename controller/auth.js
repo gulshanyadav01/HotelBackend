@@ -20,7 +20,7 @@ exports.postSignup = async(req, res, next) => {
             password
         })
 
-        const salt = await bcrypt.genSalt(10);
+        // const salt = await bcrypt.genSalt(10);
 
         const hash = await bcrypt.hash(password, salt);
 
