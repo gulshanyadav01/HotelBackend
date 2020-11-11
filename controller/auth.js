@@ -18,7 +18,8 @@ exports.postSignup = async(req, res, next) => {
             name,
             email,
             password,
-            email
+            email,
+            name
         })
 
         const salt = await bcrypt.genSalt(10);
