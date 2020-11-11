@@ -14,41 +14,41 @@ exports.postSignup = async(req, res, next) => {
             return res.status(400).json({ msg: "user already exists" })
         }
 
-        const user = new User(
+        const user = new User({
             name,
             email,
             password,
         })
 
-    const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(10);
 
-    const hash = await bcrypt.hash(password, salt);
+        const hash = await bcrypt.hash(password, salt);
 
-    user.password = hash;
+        user.password = hash;
 
-    await user.save();
+        await user.save();
 
-    const payload = {
-        user: {
-            id: user._id
+        const payload = {
+            user: {
+                id: user._id
+            }
         }
-    }
 
-    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
-        if (err) throw err;
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 360000 }, (err, token) => {
+            if (err) throw err;
 
-        res.json({
-            token: token,
-            name: user.name,
-            email: user.email,
-            isAdmin: user.isAdmin,
-            _id: user._id
+            res.json({
+                token: token,
+                name: user.name,
+                email: user.email,
+                isAdmin: user.isAdmin,
+                _id: user._id
+            })
         })
-    })
 
-} catch (err) {
-    console.log('err', err)
-}
+    } catch (err) {
+        console.log('err', err)
+    }
 
 }
 
